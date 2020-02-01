@@ -8,7 +8,7 @@ player.images[4] = love.graphics.newImage("images/player_4.png")
 player.nbImages = 4
 player.imgCurrent = 1
 player.keyPressed = false
-
+player.setsprite = 0
 player.x = 15
 player.y = 15
 player.life = 100
@@ -102,12 +102,34 @@ if player.x>0 and player.y>0 and player.x <= pMap.H and player.y <= pMap.W then
       ,1,pMap.TILE_HEIGHT*23)
 end
 -- Informations de debug -- tile en dessous du joueur fin
-
-
-
+-- mousse editor
+  local x2 = love.mouse.getX()
+  local y2 = love.mouse.getY()
+  local c = math.floor(x2 / pMap.TILE_WIDTH) + 1
+  local l = math.floor(y2 / pMap.TILE_HEIGHT) + 1
+  if l>0 and c>0 and l <= pMap.H and c <= pMap.W then
+    local id = pMap.Grid[l][c]
+    if love.mouse.isDown(1) then
+		pMap.Grid[l][c] = player.setsprite
+	end	
+    love.graphics.print(
+      "Ligne: "..tostring(l)..
+      " Colonne: "..tostring(c)..
+      " ID: "..tostring(id)..
+      " ("..tostring(pTileType[id])..")"
+      ,1,1)
+    
+  end
+-- mousse editor end
 love.graphics.print(player.life)
 
 end
 --
-
+function love.wheelmoved(x, y)
+    if y > 0 then
+      player.setsprite = player.setsprite +1 
+    elseif y < 0 then
+      player.setsprite = player.setsprite -1
+    end
+end
 return player
